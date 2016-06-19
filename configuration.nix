@@ -9,7 +9,12 @@
 
 let zsh = "/run/current-system/sw/bin/zsh";
     home = "/home/pkinsky";
-    user = {
+
+    theme = {
+      package = pkgs.theme-vertex;
+      name = "Vertex-Dark";
+    };
+    user = { # don't forget to set a password with passwd
       name = "pkinsky";
       group = "users";
       extraGroups = ["networkmanager" "wheel"];
@@ -18,6 +23,14 @@ let zsh = "/run/current-system/sw/bin/zsh";
       home = home;
       shell = zsh;
     };
+    xmonad_hs = pkgs.fetchgit {
+      url = "https://github.com/pkinsky/xmonad";
+      rev = "f730199532fd470f7c6d599fa4f7766e50a3f6a4";
+      sha256 = "foobar";
+    };
+    #xmonad_hs = pkgs.callPackage ./nixpkgs/xmonad_hs.nix {
+    #  home_dir = home;
+    #};
     antigen = pkgs.fetchgit {
       url = "https://github.com/zsh-users/antigen";
       rev = "1359b9966689e5afb666c2c31f5ca177006ce710";
@@ -39,12 +52,21 @@ let zsh = "/run/current-system/sw/bin/zsh";
         set backspace=indent,eol,start
 
         nnoremap <F4> :NERDTreeToggle<CR>  
+
         " and some more stuff...
       '';
       vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
       vimrcConfig.vam.pluginDictionaries = [ 
         #load always
-        { names = [ "Syntastic" "ctrlp" "colors-solarized" "supertab" "nerdtree" "rainbow_parentheses"]; } 
+        { names = [
+            "Syntastic"
+            "ctrlp" 
+            "colors-solarized" 
+            "supertab" 
+            "nerdtree" 
+            "rainbow_parentheses"
+          ]; 
+        } 
         #only load for scala files
         #{ name = "vim-scala"; ft_regex = "^.php\$";} <- not found
         #{ name = "vim-scala"; filename_regex = "^.php\$";}
@@ -74,6 +96,8 @@ in {
     initrd.checkJournalingFS = false;
   };
 
+
+
   # initial wm stuff
   services.xserver = {
     enable = true;
@@ -81,14 +105,39 @@ in {
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
+      extraPackages = hp: [
+        hp.taffybar
+      ];
     };
-    
+ 
+
+    displayManager = {
+      sessionCommands = ''
+        echo "thug life: linking $out to ${home}/.xmonad"
+        mkdir ${home}/foobar
+        echo "test pass"
+        ln -s $out ${home}/.xmonad
+      '';
+      lightdm = {
+        enable = true; # todo: change to my own img
+        background = "${pkgs.fetchurl {
+          url = "https://jb55.com/img/haskell-space.jpg";
+          md5 = "04d86f9b50e42d46d566bded9a91ee2c";
+        }}";
+        greeters.gtk = {
+          theme = theme;
+          # iconTheme = icon-theme;
+        };
+      };
+    };
+
+
+   
   };  
 
   # initial user stuff
   users.extraUsers.pkinsky = user;
 
-  
   
   users.extraGroups.vboxusers.members = [ "pkinsky" ]; #???
   users.extraGroups.docker.members = [ "pkinsky" ]; #???
@@ -98,25 +147,12 @@ in {
 
 
   networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Select internationalisation properties.
-  # i18n = {
-  #   consoleFont = "Lat2-Terminus16";
-  #   consoleKeyMap = "us";
-  #   defaultLocale = "en_US.UTF-8";
-  # };
-
-  # Set your time zone.
-  # time.timeZone = "Europe/Amsterdam";
-
-
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     wget
-    #vim
+    #vim superseded by my_vim (configured)
     binutils
     git
     chromium
@@ -125,6 +161,7 @@ in {
     xclip
     tree
     my_vim
+    haskellPackages.taffybar
   ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
