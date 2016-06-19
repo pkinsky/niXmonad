@@ -161,7 +161,15 @@ in {
     xclip
     tree
     my_vim
-    haskellPackages.taffybar
+    rxvt_unicode
+    #fonts
+    corefonts
+    inconsolata
+    ubuntu_font_family
+    fira-code
+    fira-mono
+    source-code-pro
+    ipafont
   ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
@@ -191,11 +199,22 @@ in {
       antigen bundle zsh-users/zsh-syntax-highlighting
 
       # Load the theme.
-      antigen theme sunrise
+      antigen theme bira
 
       # Tell antigen that you're done.
       antigen apply     
     '';
+  };
+
+  systemd.user.services.urxvtd = {
+    enable = true;
+    description = "RXVT-Unicode Daemon";
+    wantedBy = [ "default.target" ];
+    path = [ pkgs.rxvt_unicode-with-plugins ];
+    serviceConfig = {
+      Restart = "always";
+      ExecStart = "${pkgs.rxvt_unicode-with-plugins}/bin/urxvtd -q -o";
+    };
   };
 
 }
