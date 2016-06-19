@@ -170,6 +170,10 @@ in {
     fira-mono
     source-code-pro
     ipafont
+    #end fonts block
+
+    scala
+    sbt
   ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
