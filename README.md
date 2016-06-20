@@ -33,3 +33,4 @@ then login as pkinsky w/ your new password
 
 todo:
 - script such that setup is reduced to eval $(wget x.co/abcd.sh) or similar
+- permission errors on fresh start: links for xmonad created on first root login w/ root permissions

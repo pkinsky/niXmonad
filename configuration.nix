@@ -137,15 +137,6 @@ in {
     tree
     my_vim
     rxvt_unicode
-    #fonts
-    corefonts
-    inconsolata
-    ubuntu_font_family
-    fira-code
-    fira-mono
-    source-code-pro
-    ipafont
-    #end fonts block
 
     scala
     sbt
@@ -153,6 +144,23 @@ in {
     docker
     torbrowser
   ] ++ [pkgs.vim];
+
+   fonts = {
+     enableFontDir = true;
+     enableGhostscriptFonts = true;
+     fonts = with pkgs; [
+       corefonts  # Micrsoft free fonts
+       inconsolata  # monospaced
+       ubuntu_font_family  # Ubuntu fonts
+       unifont # some international languages
+
+       #etc: (from jb55 repo)
+       fira-code
+       fira-mono
+       source-code-pro
+       ipafont
+     ];
+   };
 
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.03";
