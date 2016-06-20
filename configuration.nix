@@ -1,12 +1,5 @@
 { config, pkgs, ... }:
 
-#caches = [ "https://cache.nixos.org/"];
-#nixfiles = "${home}/etc/nix-files";
-#machineConfig = import "${nixfiles}/machines/${machine}.nix" pkgs;
-#machine = "monad";
-#nixpkgsConfig = import "${home}/.nixpkgs/config.nix";
-#userConfig = (nixpkgsConfig {inherit pkgs;}).userConfig;
-
 let zsh = "/run/current-system/sw/bin/zsh";
     home = "/home/pkinsky";
 
@@ -28,9 +21,6 @@ let zsh = "/run/current-system/sw/bin/zsh";
       rev = "f730199532fd470f7c6d599fa4f7766e50a3f6a4";
       sha256 = "foobar";
     };
-    #xmonad_hs = pkgs.callPackage ./nixpkgs/xmonad_hs.nix {
-    #  home_dir = home;
-    #};
     antigen = pkgs.fetchgit {
       url = "https://github.com/zsh-users/antigen";
       rev = "1359b9966689e5afb666c2c31f5ca177006ce710";
@@ -52,8 +42,6 @@ let zsh = "/run/current-system/sw/bin/zsh";
         set backspace=indent,eol,start
 
         nnoremap <F4> :NERDTreeToggle<CR>  
-
-        " and some more stuff...
       '';
       vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
       vimrcConfig.vam.pluginDictionaries = [ 
@@ -72,8 +60,6 @@ let zsh = "/run/current-system/sw/bin/zsh";
         #{ name = "vim-scala"; filename_regex = "^.php\$";}
       ];
     };
-    #storeFile = fileSrc : builtins.toFile (baseNameOf fileSrc) (builtins.readFile fileSrc);
-    #test = storeFile "/etc/nixos/dotfiles/test.dot"
 in {
   imports =
     [ # Include the results of the hardware scan.
@@ -82,9 +68,10 @@ in {
 
   # from vbox tutorial
   virtualisation.virtualbox.guest.enable = true;
+  virtualisation.docker.enable = true;
 
   boot = {
-    loader.grub = { # bootloader voodoo
+    loader.grub = { # bootloader setup/voodoo
       enable = true;
       version = 2;
       # Define on which hard drive you want to install Grub.
@@ -130,17 +117,14 @@ in {
         };
       };
     };
-
-
-   
   };  
 
-  # initial user stuff
-  users.extraUsers.pkinsky = user;
 
+  # initial user setup
+  users.extraUsers.pkinsky = user;
   
-  users.extraGroups.vboxusers.members = [ "pkinsky" ]; #???
-  users.extraGroups.docker.members = [ "pkinsky" ]; #???
+  users.extraGroups.vboxusers.members = [ "pkinsky" ];
+  users.extraGroups.docker.members = [ "pkinsky" ];
 
   users.defaultUserShell = zsh;
   users.mutableUsers = true;
@@ -174,6 +158,9 @@ in {
 
     scala
     sbt
+
+    docker
+    torbrowser
   ];
 
   # The NixOS release to be compatible with for stateful data such as databases.
