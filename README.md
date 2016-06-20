@@ -13,13 +13,26 @@ nixos-generate-config --root /mnt
 ```
 
 clone the repo
-```
+```bash
 nix-env -i git
 cd /mnt/etc
 mv nixos nixos.bkup
-git clone https://github.com/pkinsky/niXmonad.git nixos # replace hardware.nix w/ generated one in nixos.bkup
+git clone https://github.com/pkinsky/niXmonad.git nixos
+cp nixos.bkup/hardware-configuration.nix nixos/
 nixos-install
 reboot
 ```
 
-that's the goal, anyway. It's a work in progress. Remember to set passwords using passwd after first login
+log in as root using the password you just chose and run
+
+```bash
+passwd pkinsky
+```
+
+then login as pkinsky w/ your new password
+
+
+ISSUES:
+. xrdb/etc stuff seems not to work on fresh install. possibly due to using nix-managed xmonad dir instead of git-cloned mutable one in home dir on fresh install
+.. may not be able to have actual xmonad git dir managed directly in xmonad
+.. maybe more fine-grained linking? link in xmonad.hs, xresources, but not the actual directory

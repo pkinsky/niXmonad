@@ -100,11 +100,12 @@ in {
 
     displayManager = {
 
-      #note: this is supposed to be immutable, tho, right? so maybe there'll be no writing of errors, etc.
       sessionCommands = '' 
         echo "thug life: linking ${xmonad_hs} to ${home}/.xmonad" > ${home}/nix_xmonad_setup_debug.log
-        ln -s -f ${xmonad_hs} ${home}/.xmonad 
-      ''; #forcing link, #yolo (will overwrite existing xmonad now)
+        mkdir -p ${home}/.xmonad
+        ln -s -f ${xmonad_hs}/xmonad.hs ${home}/.xmonad/xmonad.hs 
+        ln -s -f ${xmonad_hs}/xresources ${home}/.xmonad/xresources
+      ''; #forcing link, #yolo (will overwrite existing xmonad dir contents for now)
       lightdm = {
         enable = true; # todo: change to my own img
         background = "${pkgs.fetchurl {
