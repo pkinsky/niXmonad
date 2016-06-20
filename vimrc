@@ -1,0 +1,12 @@
+filetype plugin indent on
+set nocompatible
+syntax enable
+set background=light
+colorscheme solarized
+set nostartofline
+
+" fixes backspace, see http://stackoverflow.com/questions/5419848/backspace-doesnt-work-in-gvim-7-2-64-bit-for-windows
+set backspace=2
+set backspace=indent,eol,start
+
+nnoremap <F4> :NERDTreeToggle<CR>  

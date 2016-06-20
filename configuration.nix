@@ -30,18 +30,7 @@ let zsh = "/run/current-system/sw/bin/zsh";
     my_vim = pkgs.vim_configurable.customize {
       name = vim;
       vimrcConfig.customRC = ''
-        filetype plugin indent on
-        set nocompatible
-        syntax enable
-        set background=light
-        colorscheme solarized
-        set nostartofline
-
-        " fixes backspace, see http://stackoverflow.com/questions/5419848/backspace-doesnt-work-in-gvim-7-2-64-bit-for-windows
-        set backspace=2
-        set backspace=indent,eol,start
-
-        nnoremap <F4> :NERDTreeToggle<CR>  
+        so ${vimrc}
       '';
       vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
       vimrcConfig.vam.pluginDictionaries = [ 
@@ -60,6 +49,7 @@ let zsh = "/run/current-system/sw/bin/zsh";
         #{ name = "vim-scala"; filename_regex = "^.php\$";}
       ];
     };
+    vimrc = builtins.toFile "vimrc" (builtins.readFile ./vimrc);
 in {
   imports =
     [ # Include the results of the hardware scan.
@@ -99,13 +89,13 @@ in {
  
 
     displayManager = {
-
+      #on starting login this ensures that the nixos-managed xmonad resources are symlinked into ~/.xmonad
+      #symlinking the whole directory caused issues due to permissions in immutable nixos-land
       sessionCommands = '' 
-        echo "thug life: linking ${xmonad_hs} to ${home}/.xmonad" > ${home}/nix_xmonad_setup_debug.log
         mkdir -p ${home}/.xmonad
         ln -s -f ${xmonad_hs}/xmonad.hs ${home}/.xmonad/xmonad.hs 
         ln -s -f ${xmonad_hs}/xresources ${home}/.xmonad/xresources
-      ''; #forcing link, #yolo (will overwrite existing xmonad dir contents for now)
+      ''; #forcing links, #yolo (will overwrite existing xmonad dir contents)
       lightdm = {
         enable = true; # todo: change to my own img
         background = "${pkgs.fetchurl {
