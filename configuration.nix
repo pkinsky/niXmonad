@@ -18,8 +18,8 @@ let zsh = "/run/current-system/sw/bin/zsh";
     };
     xmonad_hs = pkgs.fetchgit {
       url = "https://github.com/pkinsky/xmonad";
-      rev = "f730199532fd470f7c6d599fa4f7766e50a3f6a4";
-      sha256 = "foobar";
+      rev = "e30c7e3f08e4507c582255b0177b12256e0479e6";
+      sha256 = "074iyayij0aw0y3779lrsrz1ahbqmb8rfhcw1vand0alr9r02nh1";
     };
     antigen = pkgs.fetchgit {
       url = "https://github.com/zsh-users/antigen";
@@ -33,7 +33,7 @@ let zsh = "/run/current-system/sw/bin/zsh";
         filetype plugin indent on
         set nocompatible
         syntax enable
-        set background=dark
+        set background=light
         colorscheme solarized
         set nostartofline
 
@@ -99,12 +99,12 @@ in {
  
 
     displayManager = {
-      sessionCommands = ''
-        echo "thug life: linking $out to ${home}/.xmonad"
-        mkdir ${home}/foobar
-        echo "test pass"
-        ln -s $out ${home}/.xmonad
-      '';
+
+      #note: this is supposed to be immutable, tho, right? so maybe there'll be no writing of errors, etc.
+      sessionCommands = '' 
+        echo "thug life: linking ${xmonad_hs} to ${home}/.xmonad" > ${home}/nix_xmonad_setup_debug.log
+        ln -s -f ${xmonad_hs} ${home}/.xmonad 
+      ''; #forcing link, #yolo (will overwrite existing xmonad now)
       lightdm = {
         enable = true; # todo: change to my own img
         background = "${pkgs.fetchurl {
@@ -161,7 +161,7 @@ in {
 
     docker
     torbrowser
-  ];
+  ] ++ [pkgs.vim];
 
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.03";
