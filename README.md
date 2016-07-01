@@ -1,5 +1,11 @@
 # niXmonad
+
+Goal: declaratively defined dev environment providing all tools necessary to develop, build and deploy dockerized scala applications.
+
 nixos x xmonad
+
+Setup
+------
 
 To set up an xmonad wm virtualbox dev machine:
 
