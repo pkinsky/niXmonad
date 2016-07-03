@@ -94,9 +94,9 @@ in {
       #on starting login this ensures that the nixos-managed xmonad resources are symlinked into ~/.xmonad
       #symlinking the whole directory caused issues due to permissions in immutable nixos-land
       sessionCommands = '' 
-        mkdir -p ${home}/.xmonad
-        ln -s -f ${xmonad_hs}/xmonad.hs ${home}/.xmonad/xmonad.hs 
-        ln -s -f ${xmonad_hs}/xresources ${home}/.xmonad/xresources
+        mkdir -p ~/.xmonad
+        ln -s -f ${xmonad_hs}/xmonad.hs ~/.xmonad/xmonad.hs 
+        ln -s -f ${xmonad_hs}/xresources ~/.xmonad/xresources
       ''; #forcing links, #yolo (will overwrite existing xmonad dir contents)
       lightdm = {
         enable = true; # todo: change to my own img
