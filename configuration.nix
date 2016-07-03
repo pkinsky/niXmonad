@@ -29,8 +29,10 @@ let zsh = "/run/current-system/sw/bin/zsh";
     vim = "vim-conf";
     my_vim = pkgs.vim_configurable.customize {
       name = vim;
+      # the call vam bit here is a total shim until I add ensime-vim to the list
       vimrcConfig.customRC = ''
         so ${vimrc}
+        call vam#ActivateAddons(['ensime-vim'])
       '';
       vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
       vimrcConfig.vam.pluginDictionaries = [ 
@@ -143,7 +145,12 @@ in {
 
     docker
     torbrowser
+
+    python
+    pythonPackages.websocket_client
+    pythonPackages.sexpdata
   ] ++ [pkgs.vim];
+
 
    fonts = {
      enableFontDir = true;
