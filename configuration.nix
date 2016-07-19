@@ -143,7 +143,12 @@ in {
 
     docker
     torbrowser
+
+    idea.idea15-ultimate
   ] ++ [pkgs.vim];
+
+  # allow intellij
+  nixpkgs.config.allowUnfree = true;
 
    fonts = {
      enableFontDir = true;
