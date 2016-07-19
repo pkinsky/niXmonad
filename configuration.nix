@@ -29,8 +29,10 @@ let zsh = "/run/current-system/sw/bin/zsh";
     vim = "vim-conf";
     my_vim = pkgs.vim_configurable.customize {
       name = vim;
+      # the call vam bit here is a total shim until I add ensime-vim to the list
       vimrcConfig.customRC = ''
         so ${vimrc}
+        call vam#ActivateAddons(['ensime-vim'])
       '';
       vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
       vimrcConfig.vam.pluginDictionaries = [ 
@@ -92,9 +94,9 @@ in {
       #on starting login this ensures that the nixos-managed xmonad resources are symlinked into ~/.xmonad
       #symlinking the whole directory caused issues due to permissions in immutable nixos-land
       sessionCommands = '' 
-        mkdir -p ${home}/.xmonad
-        ln -s -f ${xmonad_hs}/xmonad.hs ${home}/.xmonad/xmonad.hs 
-        ln -s -f ${xmonad_hs}/xresources ${home}/.xmonad/xresources
+        mkdir -p ~/.xmonad
+        ln -s -f ${xmonad_hs}/xmonad.hs ~/.xmonad/xmonad.hs 
+        ln -s -f ${xmonad_hs}/xresources ~/.xmonad/xresources
       ''; #forcing links, #yolo (will overwrite existing xmonad dir contents)
       lightdm = {
         enable = true; # todo: change to my own img
@@ -147,27 +149,33 @@ in {
     torbrowser
 
     idea.idea15-ultimate
+
+    python
+    pythonPackages.websocket_client
+    pythonPackages.sexpdata
   ] ++ [pkgs.vim];
+
+
 
   # allow intellij
   nixpkgs.config.allowUnfree = true;
 
-   fonts = {
-     enableFontDir = true;
-     enableGhostscriptFonts = true;
-     fonts = with pkgs; [
-       corefonts  # Micrsoft free fonts
-       inconsolata  # monospaced
-       ubuntu_font_family  # Ubuntu fonts
-       unifont # some international languages
+  fonts = {
+    enableFontDir = true;
+    enableGhostscriptFonts = true;
+    fonts = with pkgs; [
+      corefonts  # Micrsoft free fonts
+      inconsolata  # monospaced
+      ubuntu_font_family  # Ubuntu fonts
+      unifont # some international languages
 
-       #etc: (from jb55 repo)
-       fira-code
-       fira-mono
-       source-code-pro
-       ipafont
-     ];
-   };
+      #etc: (from jb55 repo)
+      fira-code
+      fira-mono
+      source-code-pro
+      ipafont
+    ];
+  };
 
   # The NixOS release to be compatible with for stateful data such as databases.
   system.stateVersion = "16.03";
