@@ -141,6 +141,8 @@ in {
     scala
     sbt
 
+    nix-repl
+
     docker
     torbrowser
 
