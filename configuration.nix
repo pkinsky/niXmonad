@@ -51,6 +51,14 @@ let zsh = "/run/current-system/sw/bin/zsh";
         #{ name = "vim-scala"; filename_regex = "^.php\$";}
       ];
     };
+    my_python = with pkgs; (python27.buildEnv.override {
+      ignoreCollisions = true; # by default from copy/paste
+      extraLibs = with python27Packages; [
+        # Add pythonPackages without the prefix
+        websocket_client
+        sexpdata
+      ];
+    });
     vimrc = builtins.toFile "vimrc" (builtins.readFile ./vimrc);
 in {
   imports =
@@ -151,15 +159,7 @@ in {
     idea.idea15-ultimate
 
 
-    (python27.buildEnv.override {
-      ignoreCollisions = true; # by default from copy/paste
-      extraLibs = with python27Packages; [
-        # Add pythonPackages without the prefix
-        websocket_client
-        sexpdata
-      ];
-    })
-
+    my_python
   ] ++ [pkgs.vim];
 
 
