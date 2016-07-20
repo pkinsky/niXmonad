@@ -26,31 +26,6 @@ let zsh = "/run/current-system/sw/bin/zsh";
       rev = "1359b9966689e5afb666c2c31f5ca177006ce710";
       sha256 = "0fqxidxrjli1a02f5564y6av5jz32sh86x5yq6rpv1hhr54n521w";
     };
-    vim = "vim-conf";
-    my_vim = pkgs.vim_configurable.customize {
-      name = vim;
-      # the call vam bit here is a total shim until I add ensime-vim to the list
-      vimrcConfig.customRC = ''
-        so ${vimrc}
-        call vam#ActivateAddons(['ensime-vim'])
-      '';
-      vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
-      vimrcConfig.vam.pluginDictionaries = [ 
-        #load always
-        { names = [
-            "Syntastic"
-            "ctrlp" 
-            "colors-solarized" 
-            "supertab" 
-            "nerdtree" 
-            "rainbow_parentheses"
-          ]; 
-        } 
-        #only load for scala files
-        #{ name = "vim-scala"; ft_regex = "^.php\$";} <- not found
-        #{ name = "vim-scala"; filename_regex = "^.php\$";}
-      ];
-    };
     my_python = with pkgs; (python27.buildEnv.override {
       ignoreCollisions = true; # by default from copy/paste
       extraLibs = with python27Packages; [
@@ -59,7 +34,7 @@ let zsh = "/run/current-system/sw/bin/zsh";
         sexpdata
       ];
     });
-    vimrc = builtins.toFile "vimrc" (builtins.readFile ./vimrc);
+    # vimrc = builtins.toFile "vimrc" (builtins.readFile ./vimrc);
 in {
   imports =
     [ # Include the results of the hardware scan.
@@ -137,7 +112,6 @@ in {
   # $ nix-env -qaP | grep wget
   environment.systemPackages = with pkgs; [
     wget
-    #vim superseded by my_vim (configured)
     binutils
     git
     chromium
@@ -145,7 +119,6 @@ in {
     zip
     xclip
     tree
-    my_vim
     rxvt_unicode
 
     scala
@@ -160,7 +133,10 @@ in {
 
 
     my_python
-  ] ++ [pkgs.vim];
+
+    vim_configurable
+    (vim_configurable.override {python = my_python; })
+  ];
 
 
 
@@ -190,7 +166,7 @@ in {
   programs.zsh = {
     enable = true;
     shellAliases = {
-      v = "${vim} -g";
+      #v = "${vim} -g";
       g = "git";
     };
     enableCompletion = true;
