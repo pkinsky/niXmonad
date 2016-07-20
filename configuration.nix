@@ -150,9 +150,16 @@ in {
 
     idea.idea15-ultimate
 
-    python
-    pythonPackages.websocket_client
-    pythonPackages.sexpdata
+
+    (python27.buildEnv.override {
+      ignoreCollisions = true; # by default from copy/paste
+      extraLibs = with python27Packages; [
+        # Add pythonPackages without the prefix
+        websocket_client
+        sexpdata
+      ];
+    })
+
   ] ++ [pkgs.vim];
 
 
