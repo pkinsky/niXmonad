@@ -160,9 +160,31 @@ in {
 
 
     my_python
+    emacs
   ] ++ [pkgs.vim];
 
+  nixpkgs.config.packageOverrides = pkgs: rec {
+    emacs = pkgs.emacs.overrideDerivation (args: rec {
+      withGTK3 = true;
+      withGTK2 = false;
+      pythonPath = []; # basically random python tools based on github repo this is from
+      buildInputs = with pkgs; (args.buildInputs ++
+      [
+        makeWrapper
+        python
+        python27Packages.setuptools
+        python27Packages.pip
+        python27Packages.ipython
+        python27Packages.numpy
+      ]);
 
+      postInstall = with pkgs.python27Packages; (args.postInstall + ''
+      echo "This is PYTHONPATH: " $PYTHONPATH
+      wrapProgram $out/bin/emacs \
+      --prefix PYTHONPATH : "$(toPythonPath ${python}):$(toPythonPath ${ipython}):$(toPythonPath ${setuptools}):$(toPythonPath ${pip}):$(toPythonPath ${numpy}):$PYTHONPATH";
+      '');
+    });
+  };
 
   # allow intellij
   nixpkgs.config.allowUnfree = true;
