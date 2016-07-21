@@ -1,7 +1,7 @@
 filetype plugin indent on
 set nocompatible
 syntax enable
-set background=light
+set background=dark
 colorscheme solarized
 set nostartofline
 

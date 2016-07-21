@@ -27,30 +27,7 @@ let zsh = "/run/current-system/sw/bin/zsh";
       sha256 = "0fqxidxrjli1a02f5564y6av5jz32sh86x5yq6rpv1hhr54n521w";
     };
     vim = "vim-conf";
-    my_vim = pkgs.vim_configurable.customize {
-      name = vim;
-      # the call vam bit here is a total shim until I add ensime-vim to the list
-      vimrcConfig.customRC = ''
-        so ${vimrc}
-        call vam#ActivateAddons(['ensime-vim'])
-      '';
-      vimrcConfig.vam.knownPlugins = pkgs.vimPlugins;
-      vimrcConfig.vam.pluginDictionaries = [ 
-        #load always
-        { names = [
-            "Syntastic"
-            "ctrlp" 
-            "colors-solarized" 
-            "supertab" 
-            "nerdtree" 
-            "rainbow_parentheses"
-          ]; 
-        } 
-        #only load for scala files
-        #{ name = "vim-scala"; ft_regex = "^.php\$";} <- not found
-        #{ name = "vim-scala"; filename_regex = "^.php\$";}
-      ];
-    };
+    my_vim = (import ./pkgs/vim.nix) pkgs vim;
     my_python = with pkgs; (python27.buildEnv.override {
       ignoreCollisions = true; # by default from copy/paste
       extraLibs = with python27Packages; [
@@ -59,7 +36,6 @@ let zsh = "/run/current-system/sw/bin/zsh";
         sexpdata
       ];
     });
-    vimrc = builtins.toFile "vimrc" (builtins.readFile ./vimrc);
 in {
   imports =
     [ # Include the results of the hardware scan.
