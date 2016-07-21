@@ -16,11 +16,6 @@ let zsh = "/run/current-system/sw/bin/zsh";
       home = home;
       shell = zsh;
     };
-    xmonad_hs = pkgs.fetchgit {
-      url = "https://github.com/pkinsky/xmonad";
-      rev = "e30c7e3f08e4507c582255b0177b12256e0479e6";
-      sha256 = "074iyayij0aw0y3779lrsrz1ahbqmb8rfhcw1vand0alr9r02nh1";
-    };
     antigen = pkgs.fetchgit {
       url = "https://github.com/zsh-users/antigen";
       rev = "1359b9966689e5afb666c2c31f5ca177006ce710";
@@ -74,13 +69,10 @@ in {
  
 
     displayManager = {
-      #on starting login this ensures that the nixos-managed xmonad resources are symlinked into ~/.xmonad
-      #symlinking the whole directory caused issues due to permissions in immutable nixos-land
       sessionCommands = '' 
-        if [! -e $HOME/.xmonad]; then
-          git clone https://github.com/pkinsky/xmonad $HOME/.xmonad
-        fi
-      ''; 
+        touch $HOME/test.foobar
+        git clone https://github.com/pkinsky/xmonad $HOME/.xmonad || true
+      ''; #just clone and ignore failure if already there, hacky. todo: check for file existence first
       lightdm = {
         enable = true; # todo: change to my own img
         background = "${pkgs.fetchurl {
