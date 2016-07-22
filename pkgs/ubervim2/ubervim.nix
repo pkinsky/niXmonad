@@ -4,6 +4,15 @@ let vimrc = pkgs.fetchurl {
       sha256 = "18ifhv5q9prd175q3vxbqf6qyvkk6bc7d2lhqdk0q78i68kv9y0c";
     };
     pkgs = import <nixpkgs> {};
+    my_python = with pkgs; (python27.buildEnv.override {
+        ignoreCollisions = true; # by default from copy/paste
+        extraLibs = with python27Packages; [
+          # Add pythonPackages without the prefix
+          websocket_client
+          sexpdata
+        ];
+    });
+
 in with pkgs; stdenv.mkDerivation rec {
   name = "vim-${version}";
   version = "7.4.827";
@@ -17,7 +26,7 @@ in with pkgs; stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  buildInputs = [ ncurses pkgconfig python ];
+  buildInputs = [ ncurses pkgconfig my_python ];
     
   nativeBuildInputs = [ gettext ];
 
