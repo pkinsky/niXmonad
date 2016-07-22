@@ -105,9 +105,11 @@ in {
     zip
     xclip
     tree
-    my_vim
+    #my_vim
     rxvt_unicode
 
+    (import pkgs/ubervim pkgs)
+    
     scala
     sbt
 
@@ -121,7 +123,7 @@ in {
     dmenu
     
     my_python
-  ] ++ [pkgs.vim];
+  ]; # ++ [pkgs.vim];
 
 
   fonts = {
