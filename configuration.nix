@@ -114,19 +114,15 @@ in {
     nix-repl
 
     docker
-    torbrowser
+    # torbrowser
 
-    idea.idea15-ultimate
+    # idea.idea15-ultimate
     
     dmenu
     
     my_python
   ] ++ [pkgs.vim];
 
-
-
-  # allow intellij
-  nixpkgs.config.allowUnfree = true;
 
   fonts = {
     enableFontDir = true;

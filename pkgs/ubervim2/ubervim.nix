@@ -1,9 +1,4 @@
-let vimrc = pkgs.fetchurl {
-      name = "default-vimrc";
-      url = https://projects.archlinux.org/svntogit/packages.git/plain/trunk/archlinux.vim?h=packages/vim?id=68f6d131750aa778807119e03eed70286a17b1cb;
-      sha256 = "18ifhv5q9prd175q3vxbqf6qyvkk6bc7d2lhqdk0q78i68kv9y0c";
-    };
-    pkgs = import <nixpkgs> {};
+let pkgs = import <nixpkgs> {};
     my_python = with pkgs; (python27.buildEnv.override {
         ignoreCollisions = true; # by default from copy/paste
         extraLibs = with python27Packages; [
@@ -12,7 +7,7 @@ let vimrc = pkgs.fetchurl {
           sexpdata
         ];
     });
-
+    vimrc = builtins.toFile "vimrc" (builtins.readFile ./vimrc);
 in with pkgs; stdenv.mkDerivation rec {
   name = "vim-${version}";
   version = "7.4.827";
@@ -63,3 +58,8 @@ in with pkgs; stdenv.mkDerivation rec {
     platforms   = platforms.unix;
   };
 }
+
+
+
+# todo: separation between vimrc and vim build (2x derivations)
+# goal: no recompilation of vim every time I change vimrc
