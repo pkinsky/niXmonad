@@ -23,14 +23,7 @@ let zsh = "/run/current-system/sw/bin/zsh";
     };
     vim = "vim-conf";
     my_vim = (import ./pkgs/vim.nix) pkgs vim;
-    my_python = with pkgs; (python27.buildEnv.override {
-      ignoreCollisions = true; # by default from copy/paste
-      extraLibs = with python27Packages; [
-        # Add pythonPackages without the prefix
-        websocket_client
-        sexpdata
-      ];
-    });
+    my_python = (import ./pkgs/python.nix) pkgs; 
 in {
   imports =
     [ # Include the results of the hardware scan.
@@ -124,8 +117,9 @@ in {
     torbrowser
 
     idea.idea15-ultimate
-
-
+    
+    dmenu
+    
     my_python
   ] ++ [pkgs.vim];
 
