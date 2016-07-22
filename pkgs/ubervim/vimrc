@@ -62,4 +62,15 @@ nnoremap <F4> :NERDTreeToggle<CR>
 autocmd BufWritePost *.scala :EnTypeCheck " typecheck after save
 nnoremap <localleader>t :EnTypeCheck<CR> " type inspection
 
-" 
+" Syntastic stuff:
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" source user-specific config
+so(~/.vimrc)

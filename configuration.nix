@@ -109,6 +109,7 @@ in {
     rxvt_unicode
 
     (import pkgs/ubervim pkgs)
+    #(import pkgs/ubervim/ubervimrc.nix pkgs)
     
     scala
     sbt
@@ -119,7 +120,9 @@ in {
     # torbrowser
 
     # idea.idea15-ultimate
-    
+ 
+    my_vim
+   
     dmenu
     
     my_python
