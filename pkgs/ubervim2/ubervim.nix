@@ -26,13 +26,14 @@ in with pkgs; stdenv.mkDerivation rec {
 
   enableParallelBuilding = true;
 
-  buildInputs = [ ncurses pkgconfig my_python ];
+  buildInputs = [ ncurses pkgconfig my_python gtk2 ];
     
   nativeBuildInputs = [ gettext ];
 
   configureFlags = [
     "--enable-multibyte"
     "--enable-nls"
+    "--enable-gui=gtk2"
     "--enable-pythoninterp"
     "--with-python-config-dir=${python}/lib/python2.7"
   ];
