@@ -1,0 +1,65 @@
+" put this line first in ~/.vimrc
+set nocompatible | filetype indent plugin on | syn on
+
+fun! SetupVAM()
+  let c = get(g:, 'vim_addon_manager', {})
+  let g:vim_addon_manager = c
+  let c.plugin_root_dir = expand('$HOME', 1) . '/.vim/vim-addons'
+
+  " Force your ~/.vim/after directory to be last in &rtp always:
+  " let g:vim_addon_manager.rtp_list_hook = 'vam#ForceUsersAfterDirectoriesToBeLast'
+
+  " most used options you may want to use:
+  " let c.log_to_buf = 1
+  " let c.auto_install = 0
+  let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
+  if !isdirectory(c.plugin_root_dir.'/vim-addon-manager/autoload')
+    execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '
+        \       shellescape(c.plugin_root_dir.'/vim-addon-manager', 1)
+  endif
+
+  " This provides the VAMActivate command, you could be passing plugin names, too
+  call vam#ActivateAddons([], {})
+endfun
+call SetupVAM()
+
+" ACTIVATING PLUGINS
+
+" OPTION 1, use VAMActivate
+" VAMActivate PLUGIN_NAME PLUGIN_NAME ..
+
+" OPTION 2: use call vam#ActivateAddons
+" call vam#ActivateAddons([PLUGIN_NAME], {})
+" use <c-x><c-p> to complete plugin names
+
+" OPTION 3: Create a file ~/.vim-scripts putting a PLUGIN_NAME into each line
+" See lazy loading plugins section in README.md for details
+" call vam#Scripts('~/.vim-scripts', {'tag_regex': '.*'})
+
+" ensime and ensime-vim, both are listed, ensime seems more up to date
+" update: both seem to not be up to date, using github w/ ensime org's info
+call vam#ActivateAddons(['github:ensime/ensime-vim', 'Syntastic', 'ctrlp', 'Solarized', 'Supertab', 'The_NERD_tree', 'rainbow_parentheses', 'vim-scala'])
+
+
+
+
+filetype plugin indent on
+set nocompatible
+syntax enable
+set background=dark
+colorscheme solarized
+set nostartofline
+
+" fixes backspace, see http://stackoverflow.com/questions/5419848/backspace-doesnt-work-in-gvim-7-2-64-bit-for-windows
+set backspace=2
+set backspace=indent,eol,start
+
+
+" nerdtree stuff
+nnoremap <F4> :NERDTreeToggle<CR>  
+
+" ensime stuff
+autocmd BufWritePost *.scala :EnTypeCheck " typecheck after save
+nnoremap <localleader>t :EnTypeCheck<CR> " type inspection
+
+" 
